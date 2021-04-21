@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -18,11 +20,13 @@ import com.jacob.com.Dispatch;
 import com.jacob.com.LibraryLoader;
 import com.jacob.com.Variant;
 
-import javafx.application.Platform;
+import java.io.Console;
 
 @SuppressWarnings("unused")
 public class AutoM8 {
 	public static Robot bot;
+	public static WSClient ws;
+	public static Client client;
 	public static int pause;
 	public static boolean init;
 	public static MouseListener ML;
@@ -31,10 +35,21 @@ public class AutoM8 {
 	public static M8Logger log;
 	public static SmartRecord SR;
 	public static Updater updt;
+	public static Console cnsl;
+	public static WelcomeWindow ww;
 	
-	public static String version = "v0.0.1";
+	public static String version = "v0.1.0";
 	
 	public static void main(String[] args) {
+		cnsl = System.console();
+		client = new Client();
+		try {
+			ws = new WSClient(new URI("ws://autom8.cloud:3132"));
+			ws.connect();
+		} catch (URISyntaxException e2) {
+			e2.printStackTrace();
+			System.err.println("Error connecting to AutoM8 Server: " + e2);
+		}
 		log = new M8Logger();
 		updt = new Updater();
 		// Check for Updated Version
@@ -100,23 +115,22 @@ public class AutoM8 {
             // Get the logger for "org.jnativehook" and set the level to off.
             Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
             logger.setLevel(Level.OFF);
+            
+            // Clear Screen
+            try {
+				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+			} catch (InterruptedException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            
         }
         catch (NativeHookException ex) {
             System.err.println("There was a problem registering the native hook.");
             System.err.println(ex.getMessage());
 
-//            System.exit(1);
+            System.exit(1);
         }
-		
-		try {
-			GlobalScreen.registerNativeHook();
-		}
-		catch (NativeHookException ex) {
-			System.err.println("There was a problem registering the native hook.");
-			System.err.println(ex.getMessage());
-
-//			System.exit(1);
-		}
 
 
 		// Construct the example object.
@@ -133,7 +147,8 @@ public class AutoM8 {
 		
 
 		init = true;
-		System.out.println("yo");
+		ww = new WelcomeWindow();
+		ww.welcome();
 		
 //		pList = new ProcessList();
 //		try {

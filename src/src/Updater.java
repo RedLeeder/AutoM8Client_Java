@@ -35,12 +35,17 @@ public class Updater {
 	
 	public static void getLatestVersion() throws Exception{
 		String data = getData(versionURL);
-		data = data.substring(0, data.length() - 1);
-		JsonObject obj = JsonParser.parseString(data).getAsJsonObject();
-		webVersion = obj.get("tag_name").getAsString();
-		jarURL = obj.get("assets").getAsJsonArray().get(0).getAsJsonObject().get("browser_download_url").getAsString();
-		System.out.println("Local Version: " + AutoM8.version);
-		System.out.println("Web Version: " + webVersion);
+		if (data.length() > 0) {
+			data = data.substring(0, data.length() - 1);
+			JsonObject obj = JsonParser.parseString(data).getAsJsonObject();
+			webVersion = obj.get("tag_name").getAsString();
+			jarURL = obj.get("assets").getAsJsonArray().get(0).getAsJsonObject().get("browser_download_url").getAsString();
+			System.out.println("Local Version: " + AutoM8.version);
+			System.out.println("Web Version: " + webVersion);
+		} else {
+			webVersion = AutoM8.version;
+			System.err.println("Unable to find latest AutoM8 Version");
+		}
 //		System.out.println("Download URL: " + jarURL);
 	}
 	
@@ -81,7 +86,7 @@ public class Updater {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 		
 		return "";
@@ -95,7 +100,7 @@ public class Updater {
 	        URLConnection conn = url.openConnection();
 	        InputStream is = conn.getInputStream();
 	        BufferedOutputStream fOut = null;
-	        fOut = new BufferedOutputStream(new FileOutputStream(new File("AutoM8" + webVersion + ".Jar")));
+	        fOut = new BufferedOutputStream(new FileOutputStream(new File("AutoM8" + webVersion + ".jar")));
 	        byte[] buffer = new byte[32 * 1024];
 	        int bytesRead = 0;
 	        while ((bytesRead = is.read(buffer)) != -1) {
@@ -127,12 +132,18 @@ public class Updater {
     }
     private void launch() throws FileNotFoundException, UnsupportedEncodingException
     {
-    	String[] run = {"java","-jar","AutoM8" + webVersion + ".jar"};
-        try {
-            Runtime.getRuntime().exec(run);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+//    	String[] run = {"java","-jar","AutoM8" + webVersion + ".jar"};
+//        try {
+//            Runtime.getRuntime().exec(run);
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+    	try {
+			Runtime.getRuntime().exec("cmd /c start RunAutoM8.bat");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
         AutoM8.log.WriteLog("Updated AutoM8 from " + AutoM8.version + " to " + webVersion);
         AutoM8.log.CloseLog();

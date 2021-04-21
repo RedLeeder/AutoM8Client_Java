@@ -31,9 +31,9 @@ public class M8Logger{
 		
 		
 		try {
-			logfile = new File("AutoM8Files/Logs/", "AutoM8Log_" + AutoM8.version + "_" + time + ".txt");
+			logfile = new File("AutoM8Files/Logs/", "AutoM8Log_" + AutoM8.version + "_" + time + ".log");
 			logfile.getParentFile().mkdirs();
-			System.out.println("AutoM8Files/Logs/AutoM8Log_" + AutoM8.version + "_" + time + ".txt");
+			System.out.println("AutoM8Files/Logs/AutoM8Log_" + AutoM8.version + "_" + time + ".log");
 			if (logfile.createNewFile()){
 				//Uhhh
 				}else{
@@ -48,7 +48,7 @@ public class M8Logger{
 		}
 		
 		try {
-			writer = new PrintWriter ("AutoM8Files\\Logs\\AutoM8Log_" + AutoM8.version + "_" + time + ".txt", "UTF-8");
+			writer = new PrintWriter ("AutoM8Files\\Logs\\AutoM8Log_" + AutoM8.version + "_" + time + ".log", "UTF-8");
 		} catch (FileNotFoundException e) {
 			StringWriter error = new StringWriter();
 			e.printStackTrace(new PrintWriter(error));
@@ -65,7 +65,7 @@ public class M8Logger{
 		
 		FileOutputStream fos;
 		try {
-			errlogfile = new File("AutoM8Files/Logs/", "AutoM8Log_" + AutoM8.version + "_" + time + "Errors.txt");
+			errlogfile = new File("AutoM8Files/Logs/", "AutoM8Log_" + AutoM8.version + "_" + time + "Errors.log");
 			fos = new FileOutputStream(errlogfile);
 			ps = new M8PrintStream(fos, System.out);
 			System.setErr(ps);
