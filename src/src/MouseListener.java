@@ -47,8 +47,8 @@ public class MouseListener implements NativeMouseInputListener {
 	public void nativeMouseMoved(NativeMouseEvent e) {
 		if (AutoM8.init) {
 			p = e.getPoint();
+//			System.out.println("Mouse Moved: " + p.getX() + ", " + p.getY());
 		}
-		//System.out.println("Mouse Moved: " + p.getX() + ", " + p.getY());
 	}
 
 	public void nativeMouseDragged(NativeMouseEvent e) {

@@ -30,10 +30,9 @@ public class KeyListener implements NativeKeyListener {
     	if (AutoM8.SR.recording()) {
     		if (e.getKeyCode() == NativeKeyEvent.VC_ESCAPE) {
 				AutoM8.SR.disableRecording();
-    		} else if (e.getKeyCode() == NativeKeyEvent.VC_CONTROL_L || e.getKeyCode() == NativeKeyEvent.VC_CONTROL_R) {
+    		} else if (e.getKeyCode() == NativeKeyEvent.VC_CONTROL) {
 	    		ctrl = true;
-	    	} else if (e.getKeyCode() == NativeKeyEvent.VC_SHIFT_L || e.getKeyCode() == NativeKeyEvent.VC_SHIFT_R) {
-	    		shift = true;
+	    	} else if (e.getKeyCode() == NativeKeyEvent.VC_SHIFT) {
 	    	} else {
 	    		actionCheck(e);
 	    	}
@@ -46,9 +45,9 @@ public class KeyListener implements NativeKeyListener {
 //    		AutoM8.SM.ShortcutCheck(e);
 //    	}
     	
-    	if (e.getKeyCode() == NativeKeyEvent.VC_CONTROL_L || e.getKeyCode() == NativeKeyEvent.VC_CONTROL_R) {
+    	if (e.getKeyCode() == NativeKeyEvent.VC_CONTROL) {
 	    	ctrl = false;
-	    } else if (e.getKeyCode() == NativeKeyEvent.VC_SHIFT_L || e.getKeyCode() == NativeKeyEvent.VC_SHIFT_R) {
+	    } else if (e.getKeyCode() == NativeKeyEvent.VC_SHIFT) {
 	    	shift = false;
 	    }
     	
@@ -56,7 +55,7 @@ public class KeyListener implements NativeKeyListener {
 
     public void nativeKeyTyped(NativeKeyEvent e) {
     	    	
-//        System.out.println("Key Typed: " + e.getKeyText(e.getKeyCode()));
+        System.out.println("Key Typed: " + NativeKeyEvent.getKeyText(e.getKeyCode()));
 //        ArkBotGUI.GUIText("Key Typed: " + e.getKeyText(e.getKeyCode()));
     }
 

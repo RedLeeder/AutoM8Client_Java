@@ -32,26 +32,14 @@ public class AutoM8 {
 	public static SmartRecord SR;
 	public static Updater updt;
 	
-	public static String version = "v0.1";
+	public static String version = "v0.0.1";
 	
 	public static void main(String[] args) {
-		
-		// Get Version
-		try {
-			File vfile = new File("AutoM8Files/Version.conf");
-			FileInputStream vfis;
-			vfis = new FileInputStream(vfile);
-			byte[] vdata = new byte[(int) vfile.length()];
-			vfis.read(vdata);
-			vfis.close();
-			version = new String(vdata);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		
+		log = new M8Logger();
 		updt = new Updater();
 		// Check for Updated Version
 		try {
+			updt.deleteOldVersions();
 			updt.download();
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
@@ -72,12 +60,12 @@ public class AutoM8 {
          * It'll tell us on which platform Java Program is executing. Based on that we'll load respective DLL file.
          * Placed under same folder of program file(.java/.class).
          */
-        String libFile = System.getProperty("os.arch").equals("amd64") ? "jacob-1.18-x64.dll" : "jacob-1.18-x86.dll";
+        String libFile = System.getProperty("os.arch").equals("amd64") ? "jacob-1.20-x64.dll" : "jacob-1.20-x86.dll";
         File temporaryDll = null;
         try {
             /* Read DLL file*/
-            //InputStream inputStream = VBAManager.class.getResourceAsStream(libFile);
-        	InputStream inputStream = new FileInputStream("AutoM8Files/lib/" + libFile);
+            InputStream inputStream = AutoM8.class.getResourceAsStream(libFile);
+//        	InputStream inputStream = new FileInputStream("AutoM8Files/lib/" + libFile);
             /**
              *  Step 1: Create temporary file under <%user.home%>\AppData\Local\Temp\jacob.dll 
              *  Step 2: Write contents of `inputStream` to that temporary file.
@@ -117,10 +105,8 @@ public class AutoM8 {
             System.err.println("There was a problem registering the native hook.");
             System.err.println(ex.getMessage());
 
-            System.exit(1);
+//            System.exit(1);
         }
-		
-		log = new M8Logger();	
 		
 		try {
 			GlobalScreen.registerNativeHook();
@@ -129,8 +115,9 @@ public class AutoM8 {
 			System.err.println("There was a problem registering the native hook.");
 			System.err.println(ex.getMessage());
 
-			System.exit(1);
+//			System.exit(1);
 		}
+
 
 		// Construct the example object.
 		ML = new MouseListener();
@@ -143,6 +130,11 @@ public class AutoM8 {
 		GlobalScreen.addNativeKeyListener(KL);
 
 		pause = 80;
+		
+
+		init = true;
+		System.out.println("yo");
+		
 //		pList = new ProcessList();
 //		try {
 //			ProcessManager.readFromFile();
@@ -154,8 +146,6 @@ public class AutoM8 {
 //		
 //		SR = new SmartRecord();
 //		
-//		init = true;
-//		System.out.println("yo");
 //		
 //		try {
 //			ProcessManager.writeToFile();
@@ -167,8 +157,8 @@ public class AutoM8 {
 		temporaryDll.deleteOnExit();
 		//ProcessManager.Close();
 		log.CloseLog();
-		System.out.println("Exiting");
-		System.exit(0);
+//		System.out.println("Exiting");
+//		System.exit(0);
 	}
 
 }
