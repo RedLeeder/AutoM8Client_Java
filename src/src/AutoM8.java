@@ -38,13 +38,14 @@ public class AutoM8 {
 	public static Console cnsl;
 	public static WelcomeWindow ww;
 	
-	public static String version = "v0.1.0";
+	public static String version = "v0.1.2";
 	
 	public static void main(String[] args) {
 		cnsl = System.console();
 		client = new Client();
 		try {
 			ws = new WSClient(new URI("ws://autom8.cloud:3132"));
+//			ws = new WSClient(new URI("ws://localhost:8080"));
 			ws.connect();
 		} catch (URISyntaxException e2) {
 			e2.printStackTrace();
@@ -145,10 +146,33 @@ public class AutoM8 {
 
 		pause = 80;
 		
-
+		while (client.LinkCode.length() < 4) {
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		init = true;
 		ww = new WelcomeWindow();
 		ww.welcome();
+		
+		Thread alive = new Thread() {
+		    public void run() {
+		        try {
+		        	int i = 1;
+		            while(true) {
+		            	ws.status("alive", Integer.toString(i++));
+			            Thread.sleep(3000);
+		            }
+		        } catch(InterruptedException v) {
+		            System.out.println(v);
+		        }
+		    }  
+		};
+		alive.start();
 		
 //		pList = new ProcessList();
 //		try {

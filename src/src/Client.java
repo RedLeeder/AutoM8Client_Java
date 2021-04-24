@@ -16,6 +16,8 @@ public class Client {
 	public String MACAddress;
 	public String ClientID;
 	
+	public String LinkCode;
+	
 	public Client() {
 		OSName = System.getProperty("os.name");
 		OSVer = System.getProperty("os.version");
@@ -24,6 +26,7 @@ public class Client {
 		HostName = getHostName();
 		MACAddress = getMAC();
 		ClientID = HostName + "@" + MACAddress;
+		LinkCode = "";
 	}
 	
 	public void printClient() {
