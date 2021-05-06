@@ -17,7 +17,7 @@ public class WelcomeWindow {
 		System.out.println("AutoM8 Client successfully initialized.\n");
 		System.out.println("Access your client via autom8.cloud");
 		System.out.println("LINK CODE: " + AutoM8.client.LinkCode + "\n");
-		System.out.println("Force quit via 'CTRL + C'");
+		System.out.println("Quit via 'CTRL + C' or from autom8.cloud");
 	}
 	
 }

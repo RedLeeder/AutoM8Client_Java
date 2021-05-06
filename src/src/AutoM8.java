@@ -20,6 +20,8 @@ import com.jacob.com.Dispatch;
 import com.jacob.com.LibraryLoader;
 import com.jacob.com.Variant;
 
+import com.google.gson.*;
+
 import java.io.Console;
 
 @SuppressWarnings("unused")
@@ -38,14 +40,17 @@ public class AutoM8 {
 	public static Console cnsl;
 	public static WelcomeWindow ww;
 	
-	public static String version = "v0.1.2";
+	public static Gson g;
+	
+	public static String version = "v0.2.0";
 	
 	public static void main(String[] args) {
+		g = new Gson();
 		cnsl = System.console();
 		client = new Client();
 		try {
-			ws = new WSClient(new URI("ws://autom8.cloud:3132"));
-//			ws = new WSClient(new URI("ws://localhost:8080"));
+//			ws = new WSClient(new URI("wss://www.autom8.cloud/wss/"));
+			ws = new WSClient(new URI("ws://localhost:8080"));
 			ws.connect();
 		} catch (URISyntaxException e2) {
 			e2.printStackTrace();
@@ -164,7 +169,7 @@ public class AutoM8 {
 		        try {
 		        	int i = 1;
 		            while(true) {
-		            	ws.status("alive", Integer.toString(i++));
+		            	ws.status("alive", g.toJson(Integer.toString(i++)));
 			            Thread.sleep(3000);
 		            }
 		        } catch(InterruptedException v) {
@@ -173,6 +178,22 @@ public class AutoM8 {
 		    }  
 		};
 		alive.start();
+		
+		Thread mouse = new Thread() {
+		    public void run() {
+		        try {
+		        	int i = 1;
+		            while(true) {
+		        		ws.status("mouse", g.toJson(ML.p));
+			            Thread.sleep(250);
+		            }
+		        } catch(InterruptedException v) {
+		            System.out.println(v);
+		        }
+		    }  
+		};
+		mouse.start();
+
 		
 //		pList = new ProcessList();
 //		try {
@@ -183,7 +204,7 @@ public class AutoM8 {
 //		}
 //		//ProcessManager.Load();
 //		
-//		SR = new SmartRecord();
+		SR = new SmartRecord();
 //		
 //		
 //		try {
@@ -196,8 +217,11 @@ public class AutoM8 {
 		temporaryDll.deleteOnExit();
 		//ProcessManager.Close();
 		log.CloseLog();
-//		System.out.println("Exiting");
-//		System.exit(0);
+	}
+	
+	public static void exit() {
+		System.out.println("Exiting");
+		System.exit(0);
 	}
 
 }

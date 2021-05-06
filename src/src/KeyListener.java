@@ -18,14 +18,15 @@ public class KeyListener implements NativeKeyListener {
 	}
 	
     public void nativeKeyPressed(NativeKeyEvent e) {
-    	if (e.getKeyCode() == NativeKeyEvent.VC_F8) {
-            try {
-				GlobalScreen.unregisterNativeHook();
-			} catch (NativeHookException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-        }
+//		System.out.println("Key Pressed: " + NativeKeyEvent.getKeyText(e.getKeyCode()));
+//    	if (e.getKeyCode() == NativeKeyEvent.VC_F8) {
+//            try {
+//				GlobalScreen.unregisterNativeHook();
+//			} catch (NativeHookException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//        }
     	
     	if (AutoM8.SR.recording()) {
     		if (e.getKeyCode() == NativeKeyEvent.VC_ESCAPE) {
@@ -40,7 +41,7 @@ public class KeyListener implements NativeKeyListener {
     }
 
     public void nativeKeyReleased(NativeKeyEvent e) {
-        
+//		System.out.println("Key Released: " + NativeKeyEvent.getKeyText(e.getKeyCode()));
 //    	if (!AutoM8.SR.recording()) {
 //    		AutoM8.SM.ShortcutCheck(e);
 //    	}
@@ -54,8 +55,7 @@ public class KeyListener implements NativeKeyListener {
     }
 
     public void nativeKeyTyped(NativeKeyEvent e) {
-    	    	
-        System.out.println("Key Typed: " + NativeKeyEvent.getKeyText(e.getKeyCode()));
+//        System.out.println("Key Typed: " + NativeKeyEvent.getKeyText(e.getKeyCode()));
 //        ArkBotGUI.GUIText("Key Typed: " + e.getKeyText(e.getKeyCode()));
     }
 

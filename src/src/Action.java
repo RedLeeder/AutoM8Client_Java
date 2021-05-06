@@ -1,38 +1,28 @@
 package src;
 import java.awt.Point;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
-import javafx.beans.Observable;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.util.Callback;
-
-public class Action implements Serializable {
-	private static final long serialVersionUID = -7605984823407369815L;
+public class Action {
+	private int id;
 	Type type;
-	private transient StringProperty name;
-	private transient IntegerProperty count;
+	private String name;
+	private int count;
 	Point point;
 	Point point2;
-	private transient StringProperty value;
-	private transient StringProperty desc;
-	private transient StringProperty estTime;
+	private String value;
+	private String desc;
+	private String estTime;
 	
-	public Action(Type type) {
+	public Action(int id, Type type) {
+		this.id = id;
 		this.type = type;
 		this.point = new Point(0,0);
 		this.point2 = new Point(0,0);
 		
-		this.name = new SimpleStringProperty(type.toString());
-		this.count = new SimpleIntegerProperty(1);
-		this.value = new SimpleStringProperty("");
-		this.desc = new SimpleStringProperty("");
-		this.estTime = new SimpleStringProperty("");
+		this.name = type.toString();
+		this.count = 1;
+		this.value = "";
+		this.desc = "";
+		this.estTime = "";
 		
 		setEstTime();
 	}
@@ -58,22 +48,13 @@ public class Action implements Serializable {
 		default: 			break;
 		}
 	}
-	
-	public static Callback<Action, Observable[]> extractor() {
-        return new Callback<Action, Observable[]>() {
-            @Override
-            public Observable[] call(Action param) {
-                return new Observable[]{param.name, param.count};
-            }
-        };
-    }
 
     @Override
     public String toString() {
     	if (type != Action.Type.TYPE) {
-            return String.format("%s: %s", name.get(), count.get());
+            return String.format("%s: %s", name, count);
     	} else {
-            return String.format("%s: %s", name.get(), value.get());
+            return String.format("%s: %s", name, value);
     	}
     }
 	
@@ -83,31 +64,39 @@ public class Action implements Serializable {
 	
 	public void execute() {
 		switch (type) {
-			case CLICK:			BotAction.Click(point.x, point.y, count.get()); break;
+			case CLICK:			BotAction.Click(point.x, point.y, count); break;
 			case DRAG:			BotAction.ClickHold(point.x, point.y);
 								BotAction.ClickRelease(point2.x, point2.y); break;
 			case RIGHTCLICK:	BotAction.RightClick(point.x, point.y); break;
-			case DELAY:			BotAction.Delay(count.get(), Integer.parseInt(value.get())); break;
-			case TAB:			BotAction.Tab(count.get()); break;
-			case ENTER:			BotAction.Enter(count.get()); break;
-			case TYPE:			BotAction.Type(value.get()); break;
+			case DELAY:			BotAction.Delay(count, Integer.parseInt(value)); break;
+			case TAB:			BotAction.Tab(count); break;
+			case ENTER:			BotAction.Enter(count); break;
+			case TYPE:			BotAction.Type(value); break;
 			case COPY:			BotAction.Copy(); break;
 			case PASTE:			BotAction.Paste(); break;
 			case SELECTALL:		BotAction.SelectAll(); break;
-			case UP:			BotAction.arrowKey(type, count.get()); break;
-			case DOWN:			BotAction.arrowKey(type, count.get()); break;
-			case LEFT:			BotAction.arrowKey(type, count.get()); break;
-			case RIGHT:			BotAction.arrowKey(type, count.get()); break;
+			case UP:			BotAction.arrowKey("UP", count); break;
+			case DOWN:			BotAction.arrowKey("DOWN", count); break;
+			case LEFT:			BotAction.arrowKey("LEFT", count); break;
+			case RIGHT:			BotAction.arrowKey("RIGHT", count); break;
 			default: 			break;
 		}
 	}
 	
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	public int getId() {
+		return this.id;
+	}
+	
 	public void setName(String s) {
-		this.name.set(s);
+		this.name = s;
 	}
 	
 	public String getName() {
-		return name.getValue();
+		return name;
 	}
 	
 	public Type getType() {
@@ -121,11 +110,11 @@ public class Action implements Serializable {
 	
 	public void setPoint(int x, int y) {
 		point = new Point(x, y);
-		value.set("(" + x + "," + y + ")");
+		value = "(" + x + "," + y + ")";
 	}
 	public void setPoint(Point p) {
 		point = new Point(p.x, p.y);
-		value.set("(" + p.x + "," + p.y + ")");
+		value = "(" + p.x + "," + p.y + ")";
 	}
 	
 	public Point getPoint() {
@@ -134,7 +123,7 @@ public class Action implements Serializable {
 	
 	public void setPoint2(Point p) {
 		point2 = new Point(p.x, p.y);
-		value.set(value.get() + "->(" + p.x + "," + p.y + ")");
+		value = value + "->(" + p.x + "," + p.y + ")";
 	}
 	
 	public Point getPoint2() {
@@ -142,19 +131,19 @@ public class Action implements Serializable {
 	}
 	
 	public void setCount(int val) {
-		count.set(val);
+		count = val;
 	}
 	
 	public void incrementCount() {
-		count.set(count.get() + 1);
+		count++;
 	}
 	
 	public void decrementCount() {
-		count.set(count.get() - 1);
+		count--;
 	}
 	
 	public int getCount() {
-		return count.get();
+		return count;
 	}
 	
 	public void setValue(String str) {
@@ -164,43 +153,23 @@ public class Action implements Serializable {
 				str = "1000";
 			}
 		}
-		this.value.set(str);
+		this.value = str;
 	}
 	
 	public String getValue() {
-		return value.get();
-	}
-	
-	public void setDesc(String desc) {
-		this.desc.set(desc);
-	}
-	
-	public String getDesc() {
-		return this.desc.get();
-	}
-	
-	public void setEstTime() {
-		this.estTime.set(getEstimatedTime() + "");
-	}
-	
-	public StringProperty nameProperty() {
-		return name;
-	}
-	
-	public IntegerProperty countProperty() {
-		return count;
-	}
-	
-	public StringProperty valueProperty() {
 		return value;
 	}
 	
-	public StringProperty descProperty() {
-		return desc;
+	public void setDesc(String desc) {
+		this.desc = desc;
 	}
 	
-	public StringProperty estTimeProperty() {
-		return estTime;
+	public String getDesc() {
+		return this.desc;
+	}
+	
+	public void setEstTime() {
+		this.estTime = getEstimatedTime() + "";
 	}
 	
 	public int getEstimatedTime() {
@@ -225,57 +194,6 @@ public class Action implements Serializable {
 			default: 			break;
 		}
 		return estTime;
-	}
-	
-	public void writeAction(ObjectOutputStream s) throws IOException{
-		final byte[] nameByte = name.get().getBytes("UTF-16");
-		final byte[] strByte = value.get().getBytes("UTF-16");
-		final byte[] descByte = desc.get().getBytes("UTF-16");
-		
-		s.writeInt(nameByte.length);
-		s.write(nameByte);
-		s.writeInt(count.get());
-		s.writeInt(this.point.x);
-		s.writeInt(this.point.y);
-		s.writeInt(this.point2.x);
-		s.writeInt(this.point2.y);
-		s.writeInt(strByte.length);
-		s.write(strByte);
-		s.writeInt(descByte.length);
-		s.write(descByte);
-	}
-	
-	public void readAction(ObjectInputStream s) throws IOException {
-		int nameLength = s.readInt();
-		final byte[] nameByte = new byte[nameLength];
-		for (int i = 0; i < nameLength; i++) {
-			nameByte[i] = s.readByte();
-		}
-		
-		this.name.setValue(new String(nameByte, "UTF-16"));
-		setType(this.name.get());
-		this.count.setValue(s.readInt());
-		int x1 = s.readInt();
-		int y1 = s.readInt();
-		int x2 = s.readInt();
-		int y2 = s.readInt();
-
-		this.setPoint(new Point(x1, y1));
-		this.setPoint2(new Point(x2, y2));
-		
-		int strLength = s.readInt();
-		final byte[] strByte = new byte[strLength];
-		for (int i = 0; i < strLength; i++) {
-			strByte[i] = s.readByte();
-		}
-		this.value.setValue(new String(strByte, "UTF-16"));
-		
-		int descLength = s.readInt();
-		final byte[] descByte = new byte[descLength];
-		for (int i = 0; i < descLength; i++) {
-			descByte[i] = s.readByte();
-		}
-		this.desc.setValue(new String(descByte, "UTF-16"));
 	}
 	
 	public void printAction() {

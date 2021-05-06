@@ -59,6 +59,9 @@ public class BotAction {
 			bot.delay(value);
 		}
 	}
+	public static void Delay(int value) {
+		bot.delay(value);
+	}
 	
 	public static void Tab(int count) {
 		for(int c = count; c > 0; c--) {
@@ -103,13 +106,13 @@ public class BotAction {
 	}
 	
 	// Arrow Keys
-	public static void arrowKey(Action.Type type, int count) {
+	public static void arrowKey(String type, int count) {
 		int key = -1;
 		switch (type) {
-		case UP:	key = VK_UP; break;
-		case DOWN:	key = VK_DOWN; break;
-		case LEFT:	key = VK_LEFT; break;
-		case RIGHT:	key = VK_RIGHT; break;
+		case "UP":		key = VK_UP; break;
+		case "DOWN":	key = VK_DOWN; break;
+		case "LEFT":	key = VK_LEFT; break;
+		case "RIGHT":	key = VK_RIGHT; break;
 		default:	key = -1;
 		}
 

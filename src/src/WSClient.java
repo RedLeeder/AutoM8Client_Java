@@ -9,6 +9,8 @@ import org.java_websocket.handshake.ServerHandshake;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import actions.*;
+
 // https://github.com/TooTallNate/Java-WebSocket/wiki#client-example
 public class WSClient extends WebSocketClient {
 	
@@ -28,7 +30,31 @@ public class WSClient extends WebSocketClient {
 	}
 	
 	public void status(String key, String value) {
-		String clientMessage = "{ \"ClientID\":\"" + AutoM8.client.ClientID.toString() + "\", \"type\": " + 1 + ", \"payload\": { \"key\":\"" + key + "\", \"value\":\"" + value + "\"}}";
+		String clientMessage = "{ \"ClientID\":\"" + AutoM8.client.ClientID.toString() + "\", \"type\": 1, \"payload\": { \"key\":\"" + key + "\", \"value\":" + value + "}}";
+		send(clientMessage);
+	}
+	
+	public void addJSONAction(String json, int offset) {
+		String clientMessage = "{ \"ClientID\":\"" + AutoM8.client.ClientID.toString() + "\", \"type\": 9, \"payload\": " + json + ", \"offset\": " + offset + "}";
+		send(clientMessage);
+	}
+	public void addAction(CLICK a, int offset) { addJSONAction(g.toJson(a), offset); }
+	public void addAction(COPY a, int offset) { addJSONAction(g.toJson(a), offset); }
+	public void addAction(DELAY a, int offset) { addJSONAction(g.toJson(a), offset); }
+	public void addAction(DOWN a, int offset) { addJSONAction(g.toJson(a), offset); }
+	public void addAction(DRAG a, int offset) { addJSONAction(g.toJson(a), offset); }
+	public void addAction(ENTER a, int offset) { addJSONAction(g.toJson(a), offset); }
+	public void addAction(LEFT a, int offset) { addJSONAction(g.toJson(a), offset); }
+	public void addAction(PASTE a, int offset) { addJSONAction(g.toJson(a), offset); }
+	public void addAction(RIGHT a, int offset) { addJSONAction(g.toJson(a), offset); }
+	public void addAction(RIGHTCLICK a, int offset) { addJSONAction(g.toJson(a), offset); }
+	public void addAction(SELECTALL a, int offset) { addJSONAction(g.toJson(a), offset); }
+	public void addAction(TAB a, int offset) { addJSONAction(g.toJson(a), offset); }
+	public void addAction(TYPE a, int offset) { addJSONAction(g.toJson(a), offset); }
+	public void addAction(UP a, int offset) { addJSONAction(g.toJson(a), offset); }
+	
+	public void endRecord() {
+		String clientMessage = "{ \"ClientID\":\"" + AutoM8.client.ClientID.toString() + "\", \"type\": 8 }";
 		send(clientMessage);
 	}
 
@@ -42,7 +68,9 @@ public class WSClient extends WebSocketClient {
 
 	@Override
 	public void onClose(int code, String reason, boolean remote) {
-		System.out.println("closed with exit code " + code + " additional info: " + reason);
+		System.out.println("Lost connection with AutoM8 Server: " + code + " additional info: " + reason);
+		System.out.println("Restart Client to Reconnect");
+		System.exit(0);
 	}
 
 	@Override
